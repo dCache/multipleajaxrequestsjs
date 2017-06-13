@@ -9,8 +9,9 @@
  * @param {array} urls
  * @param {string} credential
  * @param {!node} node
+ * @param {Object} headers
  */
-let MultipleAjaxRequests = function (urls, credential, node)
+let MultipleAjaxRequests = function (urls, credential, node, headers)
 {
     this._urls = urls;
     this._credential = credential;
@@ -19,6 +20,7 @@ let MultipleAjaxRequests = function (urls, credential, node)
         'detail': this._responseObject
     });
     this._node = node;
+    this._headers = headers;
 };
 MultipleAjaxRequests.prototype.send = function()
 {
@@ -52,9 +54,10 @@ MultipleAjaxRequests.prototype._singleAjaxCall = function(url)
             reject(Error("Network Error"));
         };
 
-        xhr.setRequestHeader("Content-type", "application/json");
-        xhr.setRequestHeader("Authorization", this._credential);
-        xhr.setRequestHeader("Accept", "application/json");
+        for (key in this._headers) {
+            xhr.setRequestHeader(key, this._headers[key]);
+        }
+
         xhr.send();
     });
 };

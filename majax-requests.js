@@ -8,10 +8,11 @@
  * @param {Array} urls
  * @param {String} credential
  * @param {?node} node 
+ * @param {Object} headers
  */
 class MultipleAjaxRequests
 {
-    constructor (urls, credential, node)
+    constructor (urls, credential, node, headers)
     {
         this._urls = urls;
         this._credential = credential;
@@ -21,6 +22,7 @@ class MultipleAjaxRequests
             'detail': this._responseObject
         });
         this.node = node;
+        this._headers = headers;
     }
     /**
      * 
@@ -65,9 +67,9 @@ class MultipleAjaxRequests
                 reject(Error("Network Error"));
             };
 
-            xhr.setRequestHeader("Content-type", "application/json");
-            xhr.setRequestHeader("Authorization", this._credential);
-            xhr.setRequestHeader("Accept", "application/json");
+            for (key in this._headers) {
+                xhr.setRequestHeader(key, this._headers[key]);
+            }
             xhr.send();
         });
     }
