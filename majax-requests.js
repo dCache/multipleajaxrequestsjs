@@ -67,6 +67,7 @@ class MultipleAjaxRequests
                 reject(Error("Network Error"));
             };
 
+            let key;
             for (key in this._headers) {
                 xhr.setRequestHeader(key, this._headers[key]);
             }
