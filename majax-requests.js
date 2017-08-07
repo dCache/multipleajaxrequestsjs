@@ -6,21 +6,24 @@
  * 
  * @class MultipleAjaxRequests
  * @param {Array} urls
- * @param {String} credential
- * @param {?node} node 
- * @param {Object} headers
+ * @param {?node} node. Node that will be listing to the `allResolved` event 
+ * @param {Object} headers, e.g. {"Authorization": "Basic XXX"}
  */
 class MultipleAjaxRequests
 {
-    constructor (urls, credential, node, headers)
+    constructor (urls, node, headers)
     {
         this._urls = urls;
-        this._credential = credential;
         this._responseObject = [];
         this.isResolved = false;
-        this.allResolvedEvent = new CustomEvent('allResolved', {
-            'detail': this._responseObject
+        /**
+         * @event allResolved
+         * This will be fire when all request have been processed
+         */
+        this.allResolvedEvent = new CustomEvent("allResolved", {
+            "detail": this._responseObject
         });
+
         this.node = node;
         this._headers = headers;
     }
@@ -31,8 +34,7 @@ class MultipleAjaxRequests
     async send()
     {
         const textPromises = this._urls.map(async url => {
-            const response = await this._singleAjaxCall(url);
-            return response;
+            return await this._singleAjaxCall(url);
         });
 
         for (const textPromise of textPromises) {
@@ -54,7 +56,7 @@ class MultipleAjaxRequests
     {
         return new Promise( (resolve, reject) => {
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', url);
+            xhr.open("GET", url);
 
             xhr.onload = function() {
                 if (xhr.status >= 200 || xhr.status < 500) {
