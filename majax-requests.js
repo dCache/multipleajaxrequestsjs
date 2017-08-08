@@ -37,8 +37,8 @@ class MultipleAjaxRequests
          * This will be fire when all request have been processed
          */
         this.allResolvedEvent = new CustomEvent('allResolved', {
-            bubbles: this._getBoolean(bubbles),
-            cancelable: this._getBoolean(cancelable),
+            bubbles: this.constructor._getBoolean(bubbles),
+            cancelable: this.constructor._getBoolean(cancelable),
             detail: this._responseObject,
         });
 
@@ -91,7 +91,7 @@ class MultipleAjaxRequests
             };
 
             for (const key in this._headers) {
-                if (Object.prototype.hasOwnProperty.call(this._headers.has, key)) {
+                if (Object.prototype.hasOwnProperty.call(this._headers, key)) {
                     xhr.setRequestHeader(key, this._headers[key]);
                 }
             }
@@ -118,6 +118,6 @@ class MultipleAjaxRequests
      */
     static _getBoolean(value)
     {
-        return typeof foo === "undefined" ? true: value;
+        return typeof value === "undefined" ? true: value;
     }
 }
